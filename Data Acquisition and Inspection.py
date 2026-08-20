@@ -8,3 +8,5 @@ print("Raw shape:", df.shape)
 print(df.head(5))
 print("\nInfo:")
 df.info()
+
+#Inspecting data

@@ -1,3 +1,16 @@
+"""
+Task 2: Data Acquisition, Inspection, and Documentation
+PhiUSIIL Phishing URL Dataset
+ 
+This script loads the dataset and produces every result referenced in the
+Task 2 write-up: structure summary, dtype inspection, missing values,
+duplicate records, value-range checks, unique-value checks, and the
+inconsistency checks (Title/HasTitle mismatch, URLLength vs actual URL
+string length, duplicate-URL label consistency).
+
+"""
+
+
 import pandas as pd
 import re
 

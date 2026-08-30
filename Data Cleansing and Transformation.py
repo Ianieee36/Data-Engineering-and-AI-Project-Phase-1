@@ -50,12 +50,12 @@ print("\n--- 3. Invalid values [IsHTTPS and IsDomainIP] ---")
 
 # IsHTTPS: recompute from the actual URL schemed prefix, not the stored flag
 before_https_mismatch = (
-    (df_drop_dup["IsHTTPS"] == 1) & (-df_drop_dup["URL"].str.startswith("https://"))
+    (df_drop_dup["IsHTTPS"] == 1) & (~df_drop_dup["URL"].str.startswith("https://"))
 ).sum()
 df_drop_dup["IsHTTPS"] = df_drop_dup["URL"].str.startswith("https://").astype(int)
 print(f"IsHTTPS corrected on {before_https_mismatch} rows "
       f"(recomputed from URL scheme prefix). ")
-
+ 
 # IsDomainIP: recompute from a strict IPv4 pattern match on Domain
 ip_pattern = re.compile(r"^\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}$")
 is_bare_ip = df_drop_dup["Domain"].astype(str).str.match(ip_pattern)
@@ -76,12 +76,13 @@ placeholder_count = (
 ).sum()
 df_drop_dup.loc[
     (df_drop_dup["HasTitle"] == 0) & (df_drop_dup["Title"] == "0"), "Title"
-] = ""
-print(f"Title placeholder '0' cleared on {placeholder_count} rows.")
+] = np.nan
+print(f"Title placeholder '0' cleared to NaN on {placeholder_count} rows.")
 
 # Title: strip stray whitespace; TLD: standardise casing to lowercase
 df_drop_dup["Title"] = df_drop_dup["Title"].astype(str).str.strip()
 df_drop_dup["TLD"] = df_drop_dup["TLD"].astype(str).str.lower()
+print("Title whitespace stripped; TLD standardised to lowercase.\n")
 
 print("=" * 50)
 
@@ -159,3 +160,8 @@ df_model = df_clean.drop(columns=[c for c in drop_cols if c in df_clean.columns]
 print(f"Cleaned dataset (with traceability columns): "
       f"{df_clean.shape[0]:,} rows x {df_clean.shape[1]} columns")
 print(f"ML-ready model matrix: {df_model.shape[0]:,} rows x {df_model.shape[1]} columns")
+
+# Save both outputs to for Task 4
+df_clean.to_csv("PhiUSIIL_cleaned.csv", index=False)
+df_model.to_csv("PhiUSIIL_model_matrix.csv", index=False)
+print("\nSaved: PhiUSIIL_cleaned.csv, PhiUSIIL_model_matrix.csv")

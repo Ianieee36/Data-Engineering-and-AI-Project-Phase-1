@@ -25,3 +25,31 @@ print(df.duplicated().sum())
 range_cols = ["URLSimilarityIndex"]
 print("\nMinimum and maximum values:")
 print(df[range_cols].agg(["min", "max"]))
+
+
+# Binary-like check
+binary_cols = [
+    "IsDomainIP",
+    "HasObfuscation",
+    "IsHTTPS",
+    "HasTitle",
+    "HasFavicon",
+    "Robots",
+    "IsResponsive",
+    "HasDescription",
+    "HasExternalFormSubmit",
+    "HasSocialNet",
+    "HasSubmitButton",
+    "HasHiddenFields",
+    "HasPasswordField",
+    "Bank",
+    "Pay",
+    "Crypto",
+    "HasCopyrightInfo"
+]
+
+for col in binary_cols:
+    unique_values = df[col].unique()
+    print(f"\nColumn '{col}' unique values: {unique_values}")
+
+

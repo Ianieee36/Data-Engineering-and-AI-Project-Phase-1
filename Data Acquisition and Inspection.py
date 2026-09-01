@@ -53,3 +53,9 @@ for col in binary_cols:
     print(f"\nColumn '{col}' unique values: {unique_values}")
 
 
+
+# Recorded URLLength vs URLLength calculated from URL
+calculated_url_length = df["URL"].str.len()
+difference = df["URLLength"] - calculated_url_length
+print("\nDifference between recorded URLLength and calculated URLLength:")
+print(difference.value_counts())

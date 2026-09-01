@@ -8,3 +8,5 @@
 # Dependincies
 
 **pandas** (run pip install pandas)
+**scikit-learn** (run pip install scikit-learn)
+**matplotlib** (run pip install matplotlib)

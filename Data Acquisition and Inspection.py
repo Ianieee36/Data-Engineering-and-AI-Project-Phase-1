@@ -114,7 +114,7 @@ print("\n3.5 Inconsistent / Invalid entry checks")
 # 1. Title placeholder mismatch
 print("------ Title Placeholder Mismatch ------")
 empty_title = df["Title"].astype(str).str.strip() == ""
-mismatch = df[(df["HasTitle"] == 0) & (-empty_title)]
+mismatch = df[(df["HasTitle"] == 0) & (~empty_title)]
 print(f"\n[1] Rows with HasTitle=0 but non-blank Title text : {len(mismatch)}")
 if len(mismatch) > 0:
     print("\nSample values in 'Title' for these rows:")

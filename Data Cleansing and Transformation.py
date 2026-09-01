@@ -38,3 +38,28 @@ p_outliers = (
 
 print("Potential outliers in URLLength:")
 print(df[p_outliers].loc[:, ["URL", "URLLength"]])
+
+
+#TLD outliers
+p_tld_outliers = (
+    (df["TLDLength"] > 63)
+)
+
+print("Potential outliers in TLDLength:")
+print(df[p_tld_outliers].loc[:, ["URL", "TLDLength"]])
+
+plt.figure(figsize=(8, 5))
+plt.boxplot(df["TLDLength"].dropna())
+plt.ylabel("TLD Length")
+plt.title("Distribution of TLD Length")
+plt.show()
+
+
+# numerical standardization
+from sklearn.preprocessing import StandardScaler
+
+numeric_columns = df_clean.select_dtypes(include=["number"]).columns # selecting only numeric columns
+numeric_features = df_clean[numeric_columns].drop(columns=["label"]) # removing label column from features to be scaled
+
+scaler = StandardScaler()
+scaled_features = scaler.fit_transform(numeric_features)

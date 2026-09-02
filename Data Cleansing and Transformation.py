@@ -63,3 +63,61 @@ numeric_features = df_clean[numeric_columns].drop(columns=["label"]) # removing 
 
 scaler = StandardScaler()
 scaled_features = scaler.fit_transform(numeric_features)
+
+print("Scaled features:", scaled_features[:5])
+
+
+
+
+
+
+### VISUALIZATIONS ###
+import numpy as np
+import seaborn as sns
+
+target_col = "label"
+
+
+numeric_cols = df_clean.select_dtypes(include=[np.number]).columns.tolist()
+numeric_cols = [c for c in numeric_cols if c != target_col]
+
+corr = df_clean[numeric_cols + [target_col]].corr()
+
+# Correlation heatmap
+plt.figure(figsize=(18, 15))
+sns.heatmap(corr, cmap="coolwarm", center=0, square=True, cbar_kws={"shrink": 0.6}, linewidths=0.3)
+plt.title("Correlation Heatmap - df_clean (Numeric Features & Target)")
+plt.tight_layout()
+plt.savefig("corr_heatmap_df_clean.png")
+plt.close()
+
+# Ranked feature-target correlations
+target_corr = df_clean[numeric_cols + [target_col]].corr()[target_col].drop(target_col).sort_values()
+
+print("\nTOP 10 MOST NEGATIVELY CORRELATED WITH label")
+print(target_corr.head(10).round(3).to_string())
+print("\nTOP 10 MOST POSITIVELY CORRELATED WITH label")
+print(target_corr.tail(10).round(3).to_string())
+
+plt.figure(figsize=(9, 8))
+top_corr = pd.concat([target_corr.head(8), target_corr.tail(8)])
+colors = ["#d64550" if v < 0 else "#3a7d44" for v in top_corr.values]
+plt.barh(top_corr.index, top_corr.values, color=colors)
+plt.axvline(0, color="black", linewidth=0.8)
+plt.title("Feature Correlation with Target (label) - df_clean")
+plt.xlabel("Pearson correlation")
+plt.tight_layout()
+plt.savefig("target_corr_df_clean.png")
+plt.close()
+
+# signed pearson correlation heatmap for top 20 features most correlated with label
+target_corr_all = df_clean[numeric_cols + [target_col]].corr()[target_col].drop(target_col)
+top20 = target_corr_all.abs().sort_values(ascending=False).head(20).index.tolist()
+corr_small = df_clean[top20 + [target_col]].corr()
+
+plt.figure(figsize=(11, 9))
+sns.heatmap(corr_small, cmap="coolwarm", center=0, square=True, annot=True, fmt=".2f", annot_kws={"size": 7}, cbar_kws={"shrink": 0.7}, linewidths=0.4)
+plt.title("Correlation Heatmap — Top 20 Features Most Correlated with label")
+plt.xticks(rotation=45, ha="right")
+plt.tight_layout()
+plt.savefig("corr_heatmap_top20.png")

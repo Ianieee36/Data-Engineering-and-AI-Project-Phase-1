@@ -121,3 +121,26 @@ plt.title("Correlation Heatmap — Top 20 Features Most Correlated with label")
 plt.xticks(rotation=45, ha="right")
 plt.tight_layout()
 plt.savefig("corr_heatmap_top20.png")
+
+
+## Scatter plots
+# LineOfCode vs NoOfExternalRef
+sample = df_clean.sample(min(5000, len(df_clean)), random_state=42)
+
+palette = {0: "#d64550", 1: "#3a7d44"}  # 0=Phishing, 1=Legitimate
+labels = {0: "Phishing", 1: "Legitimate"}
+
+plt.figure(figsize=(8, 6))
+for val in [0, 1]:
+    subset = sample[sample[target_col] == val]
+    plt.scatter(subset["LineOfCode"], subset["NoOfExternalRef"], color=palette[val], label=labels[val], alpha=0.4, s=18)
+
+plt.title("LineOfCode vs NoOfExternalRef (5,000-row sample)")
+plt.xlabel("LineOfCode")
+plt.ylabel("NoOfExternalRef")
+plt.xlim(0, sample["LineOfCode"].quantile(0.98))
+plt.ylim(0, sample["NoOfExternalRef"].quantile(0.98))
+plt.legend(title="label")
+plt.tight_layout()
+plt.savefig("scatter_loc_vs_extref.png")
+plt.close()
